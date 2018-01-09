@@ -9,10 +9,16 @@
         <form id="login" action="">
             <input id="nick"/><button>Login</button>
         </form>
+        <form id="readyF" action="">
+            <button id="ready" disabled>Ready</button>
+            <button id="unready" hidden>Unready</button>
+        </form>
+        <ul id="players"></ul>
         <script src="/socket.io/socket.io.js"></script>
         <script
         src="https://code.jquery.com/jquery-3.2.1.js"
         integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
         crossorigin="anonymous"></script>
+        <script src="/game.js"></script>
     </body>
 </html>
