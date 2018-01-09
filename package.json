@@ -1,0 +1,35 @@
+{
+  "name": "game_of_the_goose",
+  "version": "1.0.0",
+  "description": "This exercise should be a funny way of preparing for our semester exam. It will bring together most of the topics we covered in the first semester. Work on it seriously and you can be sure that you will master the upcoming exam.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rstropek-teaching/real-time-game-quiz-4bhif-KeitaroW.git"
+  },
+  "keywords": [
+    "goose",
+    "game"
+  ],
+  "author": "KeitaroW",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rstropek-teaching/real-time-game-quiz-4bhif-KeitaroW/issues"
+  },
+  "homepage": "https://github.com/rstropek-teaching/real-time-game-quiz-4bhif-KeitaroW#readme",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "express": "^4.16.2",
+    "http": "0.0.0",
+    "socketio": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.11.0",
+    "@types/http-server": "^0.10.0",
+    "@types/socket.io": "^1.4.31",
+    "typescript": "^2.6.2"
+  }
+}
