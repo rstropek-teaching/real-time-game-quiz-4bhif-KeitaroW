@@ -12,7 +12,19 @@ socket.on('noLogin', function(name: string){
 });
 //effectMsg
 socket.on('effectMsg', function(effect: string){
-    alert(effect);
+    $('#action').append($('<li>').text(effect));
+});
+//edit Position of player
+socket.on('editPos', function(name: string, position: number){
+    $(`#${name}`).text(`${name}: ${position}`);
+});
+//execute game win with restart
+socket.on('gameWin', function(text: string){
+    alert(text);
+    setTimeout(function() {
+        location.reload();
+    }, 10000);
+    
 });
 //add player to list
 socket.on('addPlayer', function(player: string, color: string, setNick: boolean){
@@ -74,7 +86,7 @@ $('#login').submit(function(){
     return false;
 });
 $('#roll').submit(function(){
-    socket.emit('roll', Math.round(Math.random()*6));
+    socket.emit('roll', Math.round(Math.random()*5+1));
     return false;
 });
 $('#ready').click(function(){

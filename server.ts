@@ -86,6 +86,13 @@ sio(server).on('connection', function(socket) {
       }
       punishment[actTurn%players.length]--;
     } else {
+      switch (positions[actTurn%players.length]) {
+        case 31: if (roll != 6) {
+                  positions[actTurn%players.length] -= roll;
+                  socket.emit('effectMsg', 'You have to roll a 6 to move further.');
+                  socket.broadcast.emit('effectMsg', nickname + ' has to roll a 6 to move further.');
+                 } break;
+      }
       positions[actTurn%players.length] += roll;
       switch (positions[actTurn%players.length]) {
         case 3:  socket.emit('effectMsg', `You may move to the field in front of the next player.`);
@@ -96,7 +103,7 @@ sio(server).on('connection', function(socket) {
                  socket.broadcast.emit('effectMsg',`${nickname} can cross the river over the bridge. ${nickname} moves to field 12.`); 
                  positions[actTurn%players.length] = 12; break;
         case 15: socket.emit('effectMsg', `The bird, you had in the cage with you, flew away. To catch it, you have to return to field 10.`);
-                 socket.broadcast.emit('effectMsg',`Tired of the strenous journey ${nickname} lays themselves to bed in the hotel. ${nickname} has to miss out one turn.`); 
+                 socket.broadcast.emit('effectMsg',`The bird, ${nickname} had in the cage with them, flew away. To catch it, ${nickname} has to return to field 10.`); 
                  positions[actTurn%players.length] = 10; break;
         case 19: socket.emit('effectMsg', `Tired of the strenous journey you lay yourself to bed in the hotel. You have to miss out one turn.`);
                  socket.broadcast.emit('effectMsg',`Tired of the strenous journey ${nickname} lays himself/herself to bed in the hotel. ${nickname} has to miss out one turn.`); 
@@ -106,11 +113,6 @@ sio(server).on('connection', function(socket) {
                     socket.broadcast.emit('enemyTurn', nickname); 
                     socket.emit('effectMsg', 'You are allowed to roll again because you landed on the dice field with a ' + roll + '.');
                     socket.broadcast.emit('effectMsg', nickname + ' is allowed to roll again because ' + nickname + ' landed on the dice field with a ' + roll + '.');
-                 } break;
-        case 31: if (roll != 6) {
-                    positions[actTurn%players.length] -= roll;
-                    socket.emit('effectMsg', 'You have to roll a 6 to move further.');
-                    socket.broadcast.emit('effectMsg', nickname + ' has to roll a 6 to move further.');
                  } break;
         case 39: socket.emit('effectMsg', `You clumsy podophyllum! You fell down the stairway and have to go back to field 33.`);
                  socket.broadcast.emit('effectMsg',`${nickname} the clumsy podophyllum! ${nickname} fell down the stairway and has to go back to field 33.`); 
@@ -124,16 +126,24 @@ sio(server).on('connection', function(socket) {
         case 58: socket.emit('effectMsg', `Normally your life would've ended. But as the game once wants, you may return begin again at field 1.`);
                  socket.broadcast.emit('effectMsg',`Normally ${nickname}'s ife would've ended. But as the game once wants, ${nickname} may return begin again at field 1.`); 
                  positions[actTurn%players.length] = 1; break;
-        case 63: socket.emit('effectMsg', `Congratulations! You've made it. You've got a real goose life behind you - with all its ups and downs. If you landed here first you won the game.`);
-                 socket.broadcast.emit('effectMsg',`Congratulations! ${nickname} has made it. ${nickname} has got a real goose life behind you - with all its ups and downs.`); 
-                 break;
+      }
+      if (positions[actTurn%players.length] >= 63) {
+        socket.emit('effectMsg', `Congratulations! You've made it. You've got a real goose life behind you - with all its ups and downs. If you landed here first you won the game.`);
+        socket.broadcast.emit('effectMsg',`Congratulations! ${nickname} has made it. ${nickname} has got a real goose life behind you - with all its ups and downs.`);
+        socket.emit('gameWin', `The game has been won. It will restart in 10 seconds.`);
+        socket.broadcast.emit('gameWin',`The game has been won. It will restart in 10 seconds.`);
+        gameRunning = false;
       }
       socket.emit('effectMsg', `You rolled ${roll}.`);
       socket.broadcast.emit('effectMsg',`${nickname} rolled ${roll}.`);
+      socket.emit('editPos', nickname, positions[actTurn%players.length]);
+      socket.broadcast.emit('editPos', nickname, positions[actTurn%players.length]);
     }
-    actTurn++;
-    socket.broadcast.emit('nextTurn', readyPlayers);
-    socket.emit('nextTurn', readyPlayers);
+    if (!(positions[actTurn%players.length]-roll == 26)) {
+      actTurn++;
+      socket.broadcast.emit('nextTurn', readyPlayers);
+      socket.emit('nextTurn', readyPlayers);
+    }
   });
 });
 
